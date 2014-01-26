@@ -6,8 +6,13 @@ import lejos.nxt.*;
 public class SquareDriver {
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 150;
-
-	public static void drive(NXTRegulatedMotor leftMotor, NXTRegulatedMotor rightMotor,
+	
+	
+	// We added the isTurning boolean to know when to perform corrections and when not to
+    public static boolean isTurning = false;
+	
+    
+    public static void drive(NXTRegulatedMotor leftMotor, NXTRegulatedMotor rightMotor,
 			double leftRadius, double rightRadius, double width) {
 		// reset the motors
 		for (NXTRegulatedMotor motor : new NXTRegulatedMotor[] { leftMotor, rightMotor }) {
@@ -24,6 +29,8 @@ public class SquareDriver {
 		}
 
 		for (int i = 0; i < 4; i++) {
+			
+			isTurning = false;
 			// drive forward two tiles
 			leftMotor.setSpeed(FORWARD_SPEED);
 			rightMotor.setSpeed(FORWARD_SPEED);
@@ -31,12 +38,13 @@ public class SquareDriver {
 			leftMotor.rotate(convertDistance(leftRadius, 60.96), true);
 			rightMotor.rotate(convertDistance(rightRadius, 60.96), false);
 
+			isTurning = true;
 			// turn 90 degrees clockwise
 			leftMotor.setSpeed(ROTATE_SPEED);
 			rightMotor.setSpeed(ROTATE_SPEED);
 
-			leftMotor.rotate(convertAngle(leftRadius, width, 90.0), true);
-			rightMotor.rotate(-convertAngle(rightRadius, width, 90.0), false);
+			leftMotor.rotate(-convertAngle(leftRadius, width, 90.0), true);
+			rightMotor.rotate(convertAngle(rightRadius, width, 90.0), false);
 		}
 	}
 
