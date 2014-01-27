@@ -9,10 +9,10 @@ public class Lab2 {
 
 		// some objects that need to be instantiated
 		Odometer odometer = new Odometer();
-		LightSensor lightSensor = new LightSensor(SensorPort.S2);
+		ColorSensor colorSensor = new ColorSensor(SensorPort.S2);
 		
 		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer);
-		OdometryCorrection odometryCorrection = new OdometryCorrection(odometer,lightSensor);
+		OdometryCorrection odometryCorrection = new OdometryCorrection(odometer,colorSensor);
 
 		do {
 			// clear the display
@@ -50,7 +50,7 @@ public class Lab2 {
 			// spawn a new Thread to avoid SquareDriver.drive() from blocking
 			(new Thread() {
 				public void run() {
-					SquareDriver.drive(Motor.A, Motor.B, 2.1, 2.1, 15.54);
+					SquareDriver.drive(Motor.A, Motor.B, 2.1, 2.1, 15.57);
 				}
 			}).start();
 		}

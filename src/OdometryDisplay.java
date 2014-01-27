@@ -2,6 +2,7 @@
  * OdometryDisplay.java
  */
 import lejos.nxt.LCD;
+import lejos.nxt.LightSensor;
 
 public class OdometryDisplay extends Thread {
 	private static final long DISPLAY_PERIOD = 250;
@@ -27,13 +28,15 @@ public class OdometryDisplay extends Thread {
 			LCD.drawString("X:              ", 0, 0);
 			LCD.drawString("Y:              ", 0, 1);
 			LCD.drawString("T:              ", 0, 2);
+			LCD.drawString("light:           ", 0, 3);
 
 			// get the odometry information
 			odometer.getPosition(position, new boolean[] { true, true, true });
-
+		//	LCD.drawInt(OdometryCorrection.lightSensor.readValue(), 3, 4);
 			// display odometry information
 			for (int i = 0; i < 3; i++) {
 				LCD.drawString(formattedDoubleToString(position[i], 2), 3, i);
+				
 			}
 
 			// throttle the OdometryDisplay

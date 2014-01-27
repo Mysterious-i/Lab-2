@@ -8,14 +8,18 @@ public class Odometer extends Thread {
 	// robot position
 	private double x, y, theta;
 
+	final private double wheelRadius = 2.1;
+    final private double wheelBase = 15.57;
+	
 	 // Other private variables
     private double rightTachoCount, leftTachoCount;
-    private int previousRightTacho = Motor.B.getTachoCount();
-    private int previousLeftTacho = Motor.A.getTachoCount();
-    final private double wheelRadius = 2.85;
-    final private double width = 16.1;
     private double rightArcLength, leftArcLength;
     private double deltaTheta, deltaRobotArcLength;
+    
+    private int previousTachoR = Motor.B.getTachoCount();
+    private int previousTachoL = Motor.A.getTachoCount();
+    
+    
     
     
 	// odometer update period, in ms
@@ -42,14 +46,14 @@ public class Odometer extends Thread {
 			
 			 // First, we get the current tacho count for each motor (in radians)
             rightTachoCount = convertToRadians(Motor.B.getTachoCount()
-                            - previousRightTacho);
+                            - previousTachoR);
             leftTachoCount = convertToRadians(Motor.A.getTachoCount()
-                            - previousLeftTacho);
+                            - previousTachoL);
 
             // Once this is done, we set the current tacho as the previous
             // tacho, which we'll use at the next step
-            previousRightTacho = Motor.B.getTachoCount();
-            previousLeftTacho = Motor.A.getTachoCount();
+            previousTachoR = Motor.B.getTachoCount();
+            previousTachoL = Motor.A.getTachoCount();
 
             // We use a method detailed below to calculate the arc length
             // traveled by each wheel
@@ -58,14 +62,19 @@ public class Odometer extends Thread {
 
             // We calculate both our change in angle and our change in arc
             // length
-            deltaTheta = (rightArcLength - leftArcLength) / width;
+            deltaTheta = (rightArcLength - leftArcLength) / wheelBase;
             deltaRobotArcLength = (rightArcLength + leftArcLength) / 2;
 
 			
 			
 			synchronized (lock) {
 				// don't use the variables x, y, or theta anywhere but here!
-				theta = -0.7376;
+				// We set the x, y and theta variables based on our mathematical
+                // model
+                this.x += deltaRobotArcLength * Math.cos(theta + (deltaTheta / 2));
+                this.y += deltaRobotArcLength * Math.sin(theta + (deltaTheta / 2));
+                this.theta += deltaTheta;
+
 			}
 
 			// this ensures that the odometer only runs once every period

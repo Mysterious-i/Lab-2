@@ -5,15 +5,21 @@ import lejos.nxt.*;
 public class OdometryCorrection extends Thread {
 	private static final long CORRECTION_PERIOD = 10;
 	private Odometer odometer;
-	private LightSensor lightSensor;
+	public static ColorSensor colorSensor;
+	public static int sensorValue;
+	
+	
 	
 	//variables
 	private final int LIGHT_THRESHOLD = 45;
-	private final static double OFFSET = 10.0;
+	private final static double OFFSET = 13.0;
 	// constructor
-	public OdometryCorrection(Odometer odometer, LightSensor lightSensor) {
+	public OdometryCorrection(Odometer odometer, ColorSensor cS) {
 		this.odometer = odometer;
-		this.lightSensor=lightSensor;
+		this.colorSensor=cS;
+		
+		
+		//lightSensor.setFloodlight(true);
 	}
 
 	// run method (required for Thread)
@@ -22,12 +28,13 @@ public class OdometryCorrection extends Thread {
 
 		while (true) {
 			correctionStart = System.currentTimeMillis();
-			
+			LCD.drawInt(colorSensor.getLightValue(), 3, 4);
+			//sensorValue= lightSensor.readValue();
 				 if (!SquareDriver.isTurning) {
 	
 	                 // First we read the light sensor for a value below our
 	                 // threshold, telling us that we're crossing a line
-	                 if (lightSensor.readValue() < LIGHT_THRESHOLD) {
+	                 if (colorSensor.getLightValue() < LIGHT_THRESHOLD) {
 	                         Sound.beep();
 	                         
 	                         // If the heading is "north-south" we correct in y. Otherwise, we correct in x.
