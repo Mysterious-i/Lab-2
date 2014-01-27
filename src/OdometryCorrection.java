@@ -11,7 +11,7 @@ public class OdometryCorrection extends Thread {
 	
 	
 	//variables
-	private final int LIGHT_THRESHOLD = 45;
+	private final int LIGHT_THRESHOLD = 400;
 	private final static double OFFSET = 13.0;
 	// constructor
 	public OdometryCorrection(Odometer odometer, ColorSensor cS) {
@@ -28,15 +28,15 @@ public class OdometryCorrection extends Thread {
 
 		while (true) {
 			correctionStart = System.currentTimeMillis();
-			LCD.drawInt(colorSensor.getLightValue(), 3, 4);
+			LCD.drawInt(colorSensor.getRawLightValue(), 3, 4);
 			//sensorValue= lightSensor.readValue();
 				 if (!SquareDriver.isTurning) {
 	
 	                 // First we read the light sensor for a value below our
 	                 // threshold, telling us that we're crossing a line
-	                 if (colorSensor.getLightValue() < LIGHT_THRESHOLD) {
+	                 if (colorSensor.getRawLightValue() < LIGHT_THRESHOLD) {
 	                         Sound.beep();
-	                         
+	                        // LCD.drawString("crossed a line ",3,5);
 	                         // If the heading is "north-south" we correct in y. Otherwise, we correct in x.
 	                         if (headingUpDown(odometer.getTheta())) {
 	                                 odometer.setX(getGridLine(odometer.getX()));
