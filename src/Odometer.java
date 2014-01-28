@@ -9,7 +9,7 @@ public class Odometer extends Thread {
 	private double x, y, theta;
 
 	final private double wheelRadius = 2.1;
-    final private double wheelBase = 15.57;
+    final private double wheelBase = 15.54;
 	
 	 // Other private variables
     private double rightTachoCount, leftTachoCount;

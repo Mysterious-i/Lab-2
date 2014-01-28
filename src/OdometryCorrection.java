@@ -5,6 +5,7 @@ import lejos.nxt.*;
 public class OdometryCorrection extends Thread {
 	private static final long CORRECTION_PERIOD = 10;
 	private Odometer odometer;
+	
 	public static ColorSensor colorSensor;
 	public static int sensorValue;
 	
@@ -12,14 +13,13 @@ public class OdometryCorrection extends Thread {
 	
 	//variables
 	private final int LIGHT_THRESHOLD = 400;
-	private final static double OFFSET = 13.0;
+	private final static double OFFSET = 10.0;
 	// constructor
 	public OdometryCorrection(Odometer odometer, ColorSensor cS) {
 		this.odometer = odometer;
 		this.colorSensor=cS;
 		
-		
-		//lightSensor.setFloodlight(true);
+
 	}
 
 	// run method (required for Thread)
@@ -29,15 +29,14 @@ public class OdometryCorrection extends Thread {
 		while (true) {
 			correctionStart = System.currentTimeMillis();
 			LCD.drawInt(colorSensor.getRawLightValue(), 3, 4);
-			//sensorValue= lightSensor.readValue();
+			
 				 if (!SquareDriver.isTurning) {
 	
-	                 // First we read the light sensor for a value below our
-	                 // threshold, telling us that we're crossing a line
+	                 //if the light value read by the color sensor is below the light threshold
 	                 if (colorSensor.getRawLightValue() < LIGHT_THRESHOLD) {
-	                         Sound.beep();
-	                        // LCD.drawString("crossed a line ",3,5);
-	                         // If the heading is "north-south" we correct in y. Otherwise, we correct in x.
+	                      	Sound.beep();
+	                        
+	                         // check if the robot is going up-down , correct X value else correy Y
 	                         if (headingUpDown(odometer.getTheta())) {
 	                                 odometer.setX(getGridLine(odometer.getX()));
 	
@@ -64,15 +63,13 @@ public class OdometryCorrection extends Thread {
 	}
 	
 	
-	// This method will give us a boolean telling us whether we're heading: true
-    // for "up-down", false for "left-right"
+	//method which determines whether the robot is travelling "up/down" or "left/right" 
     private boolean headingUpDown(double theta) {
-            long headingNo = Math.round(theta / ((Math.PI) / 2));
-            return ((headingNo % 2) == 1);
+            long value = Math.round(theta / ((Math.PI) / 2));
+            return ((value % 2) == 1);
     }
 
-    // This method computes the coordinate(depending on the heading of the robot
-    // of the closest grid line that the robot has crossed
+    // depending on the heading of the robot find the closest grid line it just crossed.
     public static double getGridLine(double coordinate) {
             return Math.round(((coordinate - OFFSET - 15) / 30)) * 30 + 15 + OFFSET;
     }

@@ -8,7 +8,7 @@ public class SquareDriver {
 	private static final int ROTATE_SPEED = 150;
 	
 	
-	// We added the isTurning boolean to know when to perform corrections and when not to
+	//isTurning boolean (no correction when turning) 
     public static boolean isTurning = false;
 	
     
